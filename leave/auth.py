@@ -11,7 +11,7 @@ bp = Blueprint('auth', __name__, url_prefix='/auth')
 
 
 @bp.route('/login', methods=['GET', 'POST'])
-def authenticate():
+def login():
     if request.method == 'POST':
         password = request.form['password']
         error = None
@@ -24,6 +24,15 @@ def authenticate():
         flash(error)
 
     return render_template('auth/login.html')
+
+@bp.before_app_request
+def load_logged_in_user():
+    user = session.get('authenticated')
+
+    if not user:
+        g.user = None
+    else:
+        g.user = "Test User"
 
 
 @bp.route('/logout')
