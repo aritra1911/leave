@@ -5,7 +5,6 @@ from flask_sqlalchemy import SQLAlchemy
 
 db = SQLAlchemy()
 
-
 def create_app(test_config=None):
     # create and configure the app
     app = Flask(__name__, instance_relative_config=True)
@@ -19,15 +18,6 @@ def create_app(test_config=None):
 
     db.init_app(app)
 
-    from . import models
-
-    @app.cli.command('init-db')
-    def initdb():
-        """Initialize the database."""
-        db.drop_all(app=app)
-        db.create_all(app=app)
-        click.echo('Initialized the database.')
-
     # ensure the instance folder exists
     try:
         os.makedirs(app.instance_path)
@@ -38,5 +28,16 @@ def create_app(test_config=None):
     @app.route('/hello')
     def hello():
         return 'Hello, World!'
+
+    from . import auth
+    app.register_blueprint(auth.bp)
+
+    @app.cli.command('init-db')
+    def initdb_command():
+        """Initialize the database."""
+        from . import models
+        db.drop_all(app=db.get_app())
+        db.create_all(app=db.get_app())
+        click.echo('Initialized the database.')
 
     return app

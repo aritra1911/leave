@@ -2,15 +2,15 @@ from leave import db
 
 
 class OrganizationMaster(db.Model):
-    name = db.Column(db.String(64), primary_key=True)
-    add1 = db.Column(db.String(64), nullable=False)
-    add2 = db.Column(db.String(64))
-    add3 = db.Column(db.String(64))
+    name = db.Column(db.String(25), primary_key=True)
+    add1 = db.Column(db.String(25), nullable=False)
+    add2 = db.Column(db.String(25))
+    add3 = db.Column(db.String(25))
     city = db.Column(db.String(16), nullable=False)
     state = db.Column(db.String(16), nullable=False)
     pin = db.Column(db.String(8), nullable=False)
     phone = db.Column(db.String(16))
-    email = db.Column(db.String(64))
+    email = db.Column(db.String(30))
 
     def __repr__(self):
         return '<Organization %r>' % self.name
@@ -26,10 +26,10 @@ class LeaveMaster(db.Model):
 
 
 class EmployeeMaster(db.Model):
-    empcd = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(64), nullable=False)
-    designation = db.Column(db.String(64))
-    department = db.Column(db.String(32))
+    empcd = db.Column(db.String(6), primary_key=True)
+    name = db.Column(db.String(30), nullable=False)
+    designation = db.Column(db.String(25))
+    department = db.Column(db.String(30))
     opening_bal = db.relationship(
         'opening_balance',
         backref=db.backref('employee_master', lazy='joined'),
@@ -43,9 +43,9 @@ class EmployeeMaster(db.Model):
 class OpeningBalance(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     emp_cd = db.Column(
-        db.Integer, db.ForeignKey('employee_master.empcd'), nullable=False
+        db.String(6), db.ForeignKey('employee_master.empcd'), nullable=False
     )
-    leave_cat = db.Column(db.String)
+    leave_cat = db.Column(db.String(2))
     period_code = db.Column(
         db.Integer, db.ForeignKey('period_master.periodcd'), nullable=False
     )
