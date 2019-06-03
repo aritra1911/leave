@@ -1,16 +1,28 @@
 <!doctype html>
-<title>{% block title %}{% endblock %} - Leave</title>
-<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+<html>
+
+<head>
+  <title>{% block title %}{% endblock title %} - Leave</title>
+</head>
+
+<body>
+
 <nav>
   <h1>Leave</h1>
   <ul>
-    {% if g.user %}
-      <li><span>{{ g.user }}</span>
+    <!-- We shall override the following blocks to contain nothing
+         when rendering that particular page. We don't need a link
+         to a page we're already in. However, logout doesn't need
+         to be overridden at anytime. -->
+    {% block linkto_index %}
       <li><a href="{{ url_for('index') }}">Index</a></li>
-      <li><a href="{{ url_for('auth.logout') }}">Log Out</a>
+    {% endblock linkto_index %}
+    {% if g.logged_in %}
+      <li><a href="{{ url_for('auth.logout') }}">Log Out</a></li>
     {% endif %}
   </ul>
 </nav>
+
 <section class="content">
   <header>
     {% block header %}{% endblock %}
@@ -20,3 +32,6 @@
   {% endfor %}
   {% block content %}{% endblock %}
 </section>
+
+</body>
+</html>

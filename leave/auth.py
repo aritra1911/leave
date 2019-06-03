@@ -23,19 +23,14 @@ def login():
         error = 'Please enter a valid password'
         flash(error)
 
-    if g.user:
+    if g.logged_in:
         return redirect(url_for('index'))
 
     return render_template('auth/login.html')
 
 @bp.before_app_request
 def load_logged_in_user():
-    logged_in = session.get('logged_in')
-
-    if not logged_in:
-        g.user = None
-    else:
-        g.user = "Test User"
+    g.logged_in = session.get('logged_in')
 
 
 @bp.route('/logout')
