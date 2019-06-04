@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block linkto_employee_master %}{% endblock linkto_employee_master %}
+
+{% block header %}
+  <h1>{% block title %}Employee Master{% endblock title %}</h1>
+{% endblock header %}
+
+{% block content %}
+  <div>
+    <strong>Code</strong> : {{ employee.empcd }}<br />
+    <strong>Name</strong> : {{ employee.name }}<br/>
+    <strong>Designation</strong> : {{ employee.designation }}<br/>
+    <strong>Department</strong> : {{ employee.department }}<br/>
+  </div>
+{% endblock content %}

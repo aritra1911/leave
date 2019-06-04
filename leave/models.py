@@ -1,39 +1,43 @@
 from leave import db
 
 
-class OrganizationMaster(db.Model):
+class Organization(db.Model):
+    __tablename__ = 'organization_master'
+
     name = db.Column(db.String(25), primary_key=True)
     add1 = db.Column(db.String(25), nullable=False)
-    add2 = db.Column(db.String(25))
-    add3 = db.Column(db.String(25))
+    add2 = db.Column(db.String(25), nullable=True)
+    add3 = db.Column(db.String(25), nullable=True)
     city = db.Column(db.String(16), nullable=False)
     state = db.Column(db.String(16), nullable=False)
     pin = db.Column(db.String(8), nullable=False)
-    phone = db.Column(db.String(16))
-    email = db.Column(db.String(30))
+    phone = db.Column(db.String(16), nullable=True)
+    email = db.Column(db.String(30), nullable=True)
 
     def __repr__(self):
         return '<Organization %r>' % self.name
 
 
-class LeaveMaster(db.Model):
+class Leave(db.Model):
+    __tablename__ = 'leave_master'
+
     el = db.Column(db.Integer, primary_key=True)
-    cl = db.Column(db.Float)
-    sl = db.Column(db.Integer)
+    cl = db.Column(db.Float, nullable=False)
+    sl = db.Column(db.Integer, nullable=False)
 
     def __repr__(self):
-        return '<Leave %r>' % self.el
+        return '<Leave %r, %r, %r>' % (self.el, self.cl, self.sl)
 
 
-class EmployeeMaster(db.Model):
+class Employee(db.Model):
+    __tablename__ = 'employee_master'
+
     empcd = db.Column(db.String(6), primary_key=True)
     name = db.Column(db.String(30), nullable=False)
-    designation = db.Column(db.String(25))
-    department = db.Column(db.String(30))
+    designation = db.Column(db.String(25), nullable=False)
+    department = db.Column(db.String(30), nullable=False)
     opening_bal = db.relationship(
-        'opening_balance',
-        backref=db.backref('employee_master', lazy='joined'),
-        lazy='joined'
+        'OpeningBalance', backref='employee', lazy=True
     )
 
     def __repr__(self):
@@ -45,24 +49,24 @@ class OpeningBalance(db.Model):
     emp_cd = db.Column(
         db.String(6), db.ForeignKey('employee_master.empcd'), nullable=False
     )
-    leave_cat = db.Column(db.String(2))
+    leave_cat = db.Column(db.String(2), nullable=False)
     period_code = db.Column(
         db.Integer, db.ForeignKey('period_master.periodcd'), nullable=False
     )
-    leave_balance = db.Column(db.Integer)
+    leave_balance = db.Column(db.Integer, nullable=False)
 
     def __repr__(self):
         return '<OpeningBalance %r>' % self.id
 
 
-class PeriodMaster(db.Model):
+class Period(db.Model):
+    __tablename__ = 'period_master'
+
     periodcd = db.Column(db.Integer, primary_key=True)
-    start = db.Column(db.DateTime)
-    end = db.Column(db.DateTime)
+    start = db.Column(db.DateTime, nullable=False)
+    end = db.Column(db.DateTime, nullable=False)
     opening_bal = db.relationship(
-        'opening_balance',
-        backref=db.backref('period_master', lazy='joined'),
-        lazy='joined'
+        'OpeningBalance', backref='period', lazy=True
     )
 
     def __repr__(self):

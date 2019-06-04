@@ -3,9 +3,6 @@ import functools
 from flask import (
     Blueprint, flash, g, redirect, render_template, request, session, url_for
 )
-from werkzeug.security import check_password_hash, generate_password_hash
-
-from leave import db
 
 bp = Blueprint('auth', __name__, url_prefix='/auth')
 
@@ -42,13 +39,8 @@ def logout():
 def login_required(view):
     @functools.wraps(view)
     def wrapped_view(**kwargs):
-        logged_in = False
-        try:
-            logged_in = session['logged_in']
-        except KeyError:
-            logged_in = False
 
-        if not logged_in:
+        if not session.get('logged_in'):
             return redirect(url_for('auth.login'))
 
         return view(**kwargs)

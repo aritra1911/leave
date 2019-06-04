@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block linkto_employee_master %}{% endblock linkto_employee_master %}
+
+{% block header %}
+  <h1>{% block title %}Add Employee{% endblock title %}</h1>
+{% endblock header %}
+
+{% block content %}
+  <form method="post">
+    <label for="empcd">Code</label>
+    <input name="empcd" />
+    <label for="name">Name</label>
+    <input name="name" />
+    <label for="desg">Designation</label>
+    <input name="desg" />
+    <label for="dept">Department</label>
+    <input name="dept" />
+    <input type="submit" value="Confirm"  />
+  </form>
+{% endblock content %}
