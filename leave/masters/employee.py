@@ -99,3 +99,33 @@ def eof():
         )
 
     return redirect(url_for('employee.master'))
+
+
+@bp.route('/<empcd>/update', methods=['GET', 'POST'])
+@login_required
+def update(empcd):
+    employee = Employee.query.filter_by(empcd=empcd).first()
+    if request.method == 'POST':
+        name = request.form['name']
+        desg = request.form['desg']
+        dept = request.form['dept']
+
+        if name and desg and dept:
+            employee.name = name
+            employee.desg = desg
+            employee.dept = dept
+            db.session.commit()
+            return redirect(url_for('employee.view', empcd=employee.empcd))
+
+        flash('One or more field(s) were caught blank.', category='error')
+
+    return render_template('/masters/employee/update.html', employee=employee)
+
+
+@bp.route('/<empcd>/delete', methods=['POST',])
+@login_required
+def delete(empcd):
+    employee = Employee.query.filter_by(empcd=empcd).first()
+    db.session.delete(employee)
+    db.session.commit()
+    return redirect(url_for('employee.next', empcd=employee.empcd))

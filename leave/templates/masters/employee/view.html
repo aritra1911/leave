@@ -8,22 +8,24 @@
 
 {% block content %}
   <div>
-    <strong>Code</strong> : {{ employee.empcd }}<br />
-    <strong>Name</strong> : {{ employee.name }}<br />
-    <strong>Designation</strong> : {{ employee.designation }}<br />
-    <strong>Department</strong> : {{ employee.department }}<br />
+    <div><strong>Code : </strong>{{ employee.empcd }}</div>
+    <div><strong>Name : </strong>{{ employee.name }}</div>
+    <div><strong>Designation : </strong>{{ employee.designation }}</div>
+    <div><strong>Department : </strong>{{ employee.department }}</div>
   </div>
   <div>
     <a href="{{ url_for('employee.master') }}">BOF</a>
     <a href="{{
       url_for('employee.prev', empcd=employee.empcd)
     }}">Previous</a>
-    <a href="{{
-      url_for('employee.next', empcd=employee.empcd)
-    }}">Next</a>
+    <a href="{{ url_for('employee.next', empcd=employee.empcd) }}">Next</a>
     <a href="{{ url_for('employee.eof') }}">EOF</a>
   </div>
   <div>
-    <a href="{{ url_for('employee.create') }}">Create</a>
+    <a href="{{ url_for('employee.create') }}">Add</a>
+    <a href="{{ url_for('employee.update', empcd=employee.empcd) }}">Edit</a>
+    <form action="{{ url_for('employee.delete', empcd=employee.empcd) }}" method="post">
+      <input type="submit" value="Delete" onclick="return confirm('Are you sure?');">
+    </form>
   </div>
 {% endblock content %}

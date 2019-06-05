@@ -4,7 +4,7 @@ from leave import db
 class Organization(db.Model):
     __tablename__ = 'organization_master'
 
-    name = db.Column(db.String(25), primary_key=True)
+    name = db.Column(db.String(32), primary_key=True)
     add1 = db.Column(db.String(25), nullable=False)
     add2 = db.Column(db.String(25), nullable=True)
     add3 = db.Column(db.String(25), nullable=True)

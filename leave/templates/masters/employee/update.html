@@ -3,25 +3,24 @@
 {% block linkto_employee_master %}{% endblock linkto_employee_master %}
 
 {% block header %}
-  <h1>{% block title %}Add Employee{% endblock title %}</h1>
+  <h1>{% block title %}Update employee details{% endblock title %}</h1>
 {% endblock header %}
 
 {% block content %}
   <form method="post">
     <div>
-      <label for="empcd">Code</label>
-      <input name="empcd" />
-    </div><div>
+      <strong>Code : {{ employee.empcd }}</strong>
+  	</div><div>
       <label for="name">Name</label>
-      <input name="name" />
+      <input name="name" value="{{ employee.name }}" />
     </div><div>
       <label for="desg">Designation</label>
-      <input name="desg" />
+      <input name="desg" value="{{ employee.designation }}" />
     </div><div>
       <label for="dept">Department</label>
-      <input name="dept" />
+      <input name="dept" value="{{ employee.department }}" />
     </div><div>
       <input type="submit" value="Confirm"  />
     </div>
   </form>
-{% endblock content %}
+{% endblock content %} 
