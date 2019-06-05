@@ -18,7 +18,7 @@
       <li><a href="{{ url_for('index') }}">Index</a></li>
     {% endblock linkto_index %}
     {% block linkto_employee_master %}<li>
-      <a href="{{ url_for('masters.employee_master') }}">Employee Master</a>
+      <a href="{{ url_for('employee.master') }}">Employee Master</a>
     </li>{% endblock linkto_employee_master %}
     {% if g.logged_in %}
       <li><a href="{{ url_for('auth.logout') }}">Log Out</a></li>

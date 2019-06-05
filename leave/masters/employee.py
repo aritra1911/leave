@@ -5,33 +5,33 @@ from leave import db
 from leave.models import Employee
 from leave.auth import login_required
 
-bp = Blueprint('masters', __name__, url_prefix='/masters/employee')
+bp = Blueprint('employee', __name__, url_prefix='/masters/employee')
 
 
 @bp.route('/')
 @login_required
-def employee_master():
+def master():
     employee = Employee.query.order_by(Employee.empcd).first()
     if not employee:
-        return redirect(url_for('masters.employee_create'))
+        return redirect(url_for('employee.create'))
 
-    return redirect(url_for('masters.employee_view', empcd=employee.empcd))
+    return redirect(url_for('employee.view', empcd=employee.empcd))
 
 
 @bp.route('/<empcd>')
 @login_required
-def employee_view(empcd):
+def view(empcd):
     employee = Employee.query.filter_by(empcd=empcd).first()
     if employee is None:
         flash(f"Employee with code {empcd} doesn't exist", category='error')
-        return redirect(url_for('masters.employee_master'))
+        return redirect(url_for('employee.master'))
 
-    return render_template('masters/employee_view.html', employee=employee)
+    return render_template('masters/employee/view.html', employee=employee)
 
 
 @bp.route('/create', methods=['GET', 'POST'])
 @login_required
-def employee_create():
+def create():
     if request.method == 'POST':
         empcd = request.form['empcd']
         name = request.form['name']
@@ -47,7 +47,7 @@ def employee_create():
             )
             db.session.add(employee)
             db.session.commit()
-            return redirect(url_for('masters.employee_view', empcd=empcd))
+            return redirect(url_for('employee.view', empcd=empcd))
 
         if existing_employee:
             error = f'Employee with code {empcd} already exists'
@@ -56,44 +56,46 @@ def employee_create():
 
         flash(error, category='error')
 
-    return render_template('masters/employee_create.html')
+    return render_template('masters/employee/create.html')
 
 
 @bp.route('/<empcd>/next')
 @login_required
-def employee_next(empcd):
+def next(empcd):
     next_employee = Employee.query.filter(Employee.empcd > empcd).order_by(
         Employee.empcd
     ).first()
+
     if next_employee:
         return redirect(
-            url_for('masters.employee_view', empcd=next_employee.empcd)
+            url_for('employee.view', empcd=next_employee.empcd)
         )
 
-    return redirect(url_for('masters.employee_master'))
+    return redirect(url_for('employee.master'))
 
 
 @bp.route('/<empcd>/prev')
 @login_required
-def employee_prev(empcd):
+def prev(empcd):
     prev_employee = Employee.query.filter(Employee.empcd < empcd).order_by(
         Employee.empcd.desc()
     ).first()
+
     if prev_employee:
         return redirect(
-            url_for('masters.employee_view', empcd=prev_employee.empcd)
+            url_for('employee.view', empcd=prev_employee.empcd)
         )
 
-    return redirect(url_for('masters.employee_eof'))
+    return redirect(url_for('employee.eof'))
 
 
 @bp.route('/eof')
 @login_required
-def employee_eof():
+def eof():
     last_employee = Employee.query.order_by(Employee.empcd.desc()).first()
     if last_employee:
         return redirect(
-            url_for('masters.employee_view', empcd=last_employee.empcd)
+            url_for('employee.view', empcd=last_employee.empcd)
         )
 
-    return redirect(url_for('masters.employee_master'))
+    return redirect(url_for('employee.master'))

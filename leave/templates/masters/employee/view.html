@@ -14,16 +14,16 @@
     <strong>Department</strong> : {{ employee.department }}<br />
   </div>
   <div>
-    <a href="{{ url_for('masters.employee_master') }}">BOF</a>
+    <a href="{{ url_for('employee.master') }}">BOF</a>
     <a href="{{
-      url_for('masters.employee_prev', empcd=employee.empcd)
+      url_for('employee.prev', empcd=employee.empcd)
     }}">Previous</a>
     <a href="{{
-      url_for('masters.employee_next', empcd=employee.empcd)
+      url_for('employee.next', empcd=employee.empcd)
     }}">Next</a>
-    <a href="{{ url_for('masters.employee_eof') }}">EOF</a>
+    <a href="{{ url_for('employee.eof') }}">EOF</a>
   </div>
   <div>
-    <a href="{{ url_for('masters.employee_create') }}">Create</a>
+    <a href="{{ url_for('employee.create') }}">Create</a>
   </div>
 {% endblock content %}
