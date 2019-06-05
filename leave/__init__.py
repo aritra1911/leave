@@ -32,8 +32,9 @@ def create_app(test_config=None):
     from . import auth
     app.register_blueprint(auth.bp)
 
-    from .masters import employee
+    from .masters import employee, organization
     app.register_blueprint(employee.bp)
+    app.register_blueprint(organization.bp)
 
     from . import main
     app.register_blueprint(main.bp)

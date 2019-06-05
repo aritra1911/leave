@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block linkto_organization_master %}{% endblock linkto_organization_master %}
+
+{% block header %}
+  <h1>{% block title %}Update organization details{% endblock title %}</h1>
+{% endblock header %}
+
+{% block content %}
+  <form method="post">
+  	<div>
+      <label for="name">Name*</label>
+      <input name="name" value="{{ organization.name }}" />
+    </div><div>
+      <label for="add1">Address 1*</label>
+      <input name="add1" value="{{ organization.add1 }}" />
+    </div><div>
+      <label for="add2">Address 2</label>
+      <input name="add2" value="{{ organization.add2 }}" />
+    </div><div>
+      <label for="add3">Address 3</label>
+      <input name="add3" value="{{ organization.add3 }}" />
+    </div><div>
+      <label for="city">City*</label>
+      <input name="city" value="{{ organization.city }}" />
+    </div><div>
+      <label for="state">State*</label>
+      <input name="state" value="{{ organization.state }}" />
+    </div><div>
+      <label for="pin">Pin Code*</label>
+      <input name="pin" value="{{ organization.pin }}" />
+    </div><div>
+      <label for="phone">Phone</label>
+      <input name="phone" value="{{ organization.phone }}" />
+    </div><div>
+      <label for="email">e-Mail</label>
+      <input name="email" value="{{ organization.email }}" />
+    </div><div>
+      <input type="submit" value="Confirm"  />
+    </div>
+  </form>
+  <div><small><i>* Required fields</i></small></div>
+{% endblock content %}

@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block linkto_organization_master %}{% endblock linkto_organization_master %}
+
+{% block header %}
+  <h1>{% block title %}Organization Master{% endblock title %}</h1>
+{% endblock header %}
+
+{% block content %}
+  <div>
+    <div><strong>Name</strong> : {{ organization.name }}</div>
+    <div><strong>Address 1</strong> : {{ organization.add1 }}</div>
+    <div><strong>Address 2</strong> : {{ organization.add2 }}</div>
+    <div><strong>Address 3</strong> : {{ organization.add3 }}</div>
+    <div><strong>City</strong> : {{ organization.city }}</div>
+    <div><strong>State</strong> : {{ organization.state }}</div>
+    <div><strong>Pin Code</strong> : {{ organization.pin }}</div>
+    <div><strong>Phone</strong> : {{ organization.phone }}</div>
+    <div><strong>e-Mail</strong> : {{ organization.email }}</div>
+  </div>
+  <div>
+    <a href="{{ url_for('organization.update') }}">Edit</a>
+  </div>
+{% endblock content %}
