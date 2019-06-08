@@ -3,27 +3,26 @@ import functools
 from flask import (
     Blueprint, flash, g, redirect, render_template, request, session, url_for
 )
+from leave.forms import LoginForm
 
 bp = Blueprint('auth', __name__, url_prefix='/auth')
 
 
 @bp.route('/login', methods=['GET', 'POST'])
 def login():
-    if request.method == 'POST':
-        password = request.form['password']
-        error = None
-        if password == 'leave123':
+    form = LoginForm()
+    if form.validate_on_submit():
+        if form.password.data == 'leave123':
             session.clear()
             session['logged_in'] = True
             return redirect(url_for('index'))
 
-        error = 'Please enter a valid password'
-        flash(error)
+        flash('Please enter a valid password', category='error')
 
     if g.logged_in:
         return redirect(url_for('index'))
 
-    return render_template('auth/login.html')
+    return render_template('auth/login.html', form=form)
 
 @bp.before_app_request
 def load_logged_in_user():
