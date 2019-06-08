@@ -3,6 +3,7 @@ from flask import (
 )
 from leave import db
 from leave.models import Organization
+from leave.forms import OrganizationMasterUpdateForm
 from leave.auth import login_required
 
 bp = Blueprint('organization', __name__, url_prefix='/masters/organization')
@@ -20,45 +21,43 @@ def view():
     )
 
 
+def set_organization_details_from_form(organization, form):
+    organization.name = form.name.data
+    organization.add1 = form.add1.data
+    organization.add2 = form.add2.data
+    organization.add3 = form.add3.data
+    organization.city = form.city.data
+    organization.state = form.state.data
+    organization.pin = form.pin.data
+    organization.phone = form.phone.data
+    organization.email = form.email.data
+
+
 @bp.route('/update', methods=['GET', 'POST'])
 @login_required
 def update():
     organization = Organization.query.first()
-    if request.method == 'POST':
-        name = request.form['name']
-        add1 = request.form['add1']
-        add2 = request.form['add2']
-        add3 = request.form['add3']
-        city = request.form['city']
-        state = request.form['state']
-        pin = request.form['pin']
-        phone = request.form['phone']
-        email = request.form['email']
+    form = OrganizationMasterUpdateForm()
+    if form.validate_on_submit():
+        if not organization:
+            new_organization = Organization()
+            set_organization_details_from_form(new_organization, form)
+            db.session.add(new_organization)
+        else:
+            set_organization_details_from_form(organization, form)
 
-        if name and add1 and city and state and pin:
-            if organization:
-                organization.name = name
-                organization.add1 = add1
-                organization.add2 = add2
-                organization.add3 = add3
-                organization.city = city
-                organization.state = state
-                organization.pin = pin
-                organization.phone = phone
-                organization.email = email
-                db.session.commit()
-            else:
-                new_organization = Organization(
-                    name=name, add1=add1, add2=add2, add3=add3, city=city,
-                    state=state, pin=pin, phone=phone, email=email
-                )
-                db.session.add(new_organization)
-                db.session.commit()
+        db.session.commit()
+        return redirect(url_for('organization.view'))
 
-            return redirect(url_for('organization.view'))
+    if organization:
+        form.name.data = organization.name
+        form.add1.data = organization.add1
+        form.add2.data = organization.add2
+        form.add3.data = organization.add3
+        form.city.data = organization.city
+        form.state.data = organization.state
+        form.pin.data = organization.pin
+        form.phone.data = organization.phone
+        form.email.data = organization.email
 
-        flash('One or more required field(s) were caught blank.')
-
-    return render_template(
-        'masters/organization/update.html', organization=organization
-    )
+    return render_template('masters/organization/update.html', form=form)

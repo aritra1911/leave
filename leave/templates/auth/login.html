@@ -10,13 +10,11 @@
     <div>
       {{ form.password.label() }}
       {{ form.password() }}
-      {% if form.password.errors %}
-        <div>
+      {% if form.password.errors %}<div>
           {% for error in form.password.errors %}
             <span>{{ error }}</span>
           {% endfor %}
-        </div>
-      {% endif %}
+      </div>{% endif %}
     </div>
     <div>{{ form.submit() }}</div>
   </form>
