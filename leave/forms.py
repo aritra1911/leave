@@ -23,3 +23,19 @@ class OrganizationMasterUpdateForm(FlaskForm):
         Optional(), Email(), Length(max=30)
     ])
     submit = SubmitField('Update')
+
+
+class EmployeeMasterCreateForm(FlaskForm):
+    empcd = StringField('Code', validators=[DataRequired(), Length(max=6)])
+    name = StringField('Name', validators=[DataRequired(), Length(max=30)])
+    desg = StringField('Designation', validators=[
+        DataRequired(), Length(max=25)
+    ])
+    dept = StringField('Department', validators=[
+        DataRequired(), Length(max=30)
+    ])
+    submit = SubmitField('Add')
+
+class EmployeeMasterUpdateForm(EmployeeMasterCreateForm):
+    empcd = None
+    submit = SubmitField('Update')

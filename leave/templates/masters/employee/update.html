@@ -8,19 +8,28 @@
 
 {% block content %}
   <form method="post">
+    {{ form.hidden_tag() }}
     <div>
-      <strong>Code : {{ employee.empcd }}</strong>
+      <strong>Code : {{ empcd }}</strong>
   	</div><div>
-      <label for="name">Name</label>
-      <input name="name" value="{{ employee.name }}" />
+      {{ form.name.label() }}
+      {{ form.name() }}
+      {% if form.name.errors %}<div>
+        {% for error in form.name.errors %}<span>{{ error }}</span>{% endfor %}
+      </div>{% endif %}
     </div><div>
-      <label for="desg">Designation</label>
-      <input name="desg" value="{{ employee.designation }}" />
+      {{ form.desg.label() }}
+      {{ form.desg() }}
+      {% if form.desg.errors %}<div>
+        {% for error in form.desg.errors %}<span>{{ error }}</span>{% endfor %}
+      </div>{% endif %}
     </div><div>
-      <label for="dept">Department</label>
-      <input name="dept" value="{{ employee.department }}" />
-    </div><div>
-      <input type="submit" value="Confirm"  />
+      {{ form.dept.label() }}
+      {{ form.dept() }}
+      {% if form.dept.errors %}<div>
+        {% for error in form.dept.errors %}<span>{{ error }}</span>{% endfor %}
+      </div>{% endif %}
     </div>
+    <div>{{ form.submit() }}</div>
   </form>
-{% endblock content %} 
+{% endblock content %}

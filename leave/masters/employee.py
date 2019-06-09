@@ -4,6 +4,7 @@ from flask import (
 from leave import db
 from leave.models import Employee
 from leave.auth import login_required
+from leave.forms import EmployeeMasterCreateForm, EmployeeMasterUpdateForm
 
 bp = Blueprint('employee', __name__, url_prefix='/masters/employee')
 
@@ -18,45 +19,42 @@ def master():
     return redirect(url_for('employee.view', empcd=employee.empcd))
 
 
+def get_employee(empcd):
+    return Employee.query.filter_by(empcd=empcd).first_or_404(
+        f"Employee with code {empcd} not found"
+    )
+
+
 @bp.route('/<empcd>')
 @login_required
 def view(empcd):
-    employee = Employee.query.filter_by(empcd=empcd).first()
-    if employee is None:
-        flash(f"Employee with code {empcd} doesn't exist", category='error')
-        return redirect(url_for('employee.master'))
-
+    employee = get_employee(empcd)
     return render_template('masters/employee/view.html', employee=employee)
 
 
 @bp.route('/create', methods=['GET', 'POST'])
 @login_required
 def create():
-    if request.method == 'POST':
-        empcd = request.form['empcd']
-        name = request.form['name']
-        desg = request.form['desg']
-        dept = request.form['dept']
-
-        existing_employee = Employee.query.filter_by(empcd=empcd).first()
-        error = None
-
-        if empcd and name and desg and dept and not existing_employee:
+    form = EmployeeMasterCreateForm()
+    if form.validate_on_submit():
+        existing_employee = Employee.query.filter_by(
+            empcd=form.empcd.data
+        ).first()
+        if not existing_employee:
             employee = Employee(
-                empcd=empcd, name=name, designation=desg, department=dept
+                empcd=form.empcd.data, name=form.name.data,
+                designation=form.desg.data, department=form.dept.data
             )
             db.session.add(employee)
             db.session.commit()
-            return redirect(url_for('employee.view', empcd=empcd))
+            return redirect(url_for('employee.view', empcd=form.empcd.data))
 
-        if existing_employee:
-            error = f'Employee with code {empcd} already exists'
-        else:
-            error = 'One or more field(s) were caught blank'
+        flash(
+            f'Employee with code {form.empcd.data} already exists',
+            category='error'
+        )
 
-        flash(error, category='error')
-
-    return render_template('masters/employee/create.html')
+    return render_template('masters/employee/create.html', form=form)
 
 
 @bp.route('/<empcd>/next')
@@ -104,22 +102,21 @@ def eof():
 @bp.route('/<empcd>/update', methods=['GET', 'POST'])
 @login_required
 def update(empcd):
-    employee = Employee.query.filter_by(empcd=empcd).first()
-    if request.method == 'POST':
-        name = request.form['name']
-        desg = request.form['desg']
-        dept = request.form['dept']
+    employee = get_employee(empcd)
+    form = EmployeeMasterUpdateForm()
+    if form.validate_on_submit():
+        employee.name = form.name.data
+        employee.desg = form.desg.data
+        employee.dept = form.dept.data
+        db.session.commit()
+        return redirect(url_for('employee.view', empcd=employee.empcd))
 
-        if name and desg and dept:
-            employee.name = name
-            employee.desg = desg
-            employee.dept = dept
-            db.session.commit()
-            return redirect(url_for('employee.view', empcd=employee.empcd))
-
-        flash('One or more field(s) were caught blank.', category='error')
-
-    return render_template('/masters/employee/update.html', employee=employee)
+    form.name.data = employee.name
+    form.desg.data = employee.designation
+    form.dept.data = employee.department
+    return render_template(
+        '/masters/employee/update.html', empcd=empcd, form=form
+    )
 
 
 @bp.route('/<empcd>/delete', methods=['POST',])
